@@ -48,6 +48,7 @@ c_copy =c
 d_copy = d
 
 #this is the initial values of mu, alpha, beta, sigma in the optimization routine
+#these values are given by the user from keyboard input
 print("Initialization point a,b,c,d = ",a,b,c,d)
 
 
