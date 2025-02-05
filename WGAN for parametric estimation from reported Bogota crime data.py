@@ -59,17 +59,9 @@ Bogota = gdp.read_file(fp)
 Bogota.head()
 
 
-# In[23]:
-
-
-pd.read_csv("~/Bogota_folder/bogota_victimization.csv")
-
-
-# In[24]:
-
 
 # bogota vic, missing, population and maps
-bogota_crime_stats=pd.read_csv("~/Bogota_folder/bogota_victimization.csv")
+bogota_crime_stats=pd.read_csv("diff-crime-reporting forked from nakpinar's Github repo/Bogota_folder/bogota_victimization.csv")
 bogota_crime_stats[["LocNombre"]] = bogota_crime_stats[["District"]]
 del bogota_crime_stats["District"]
 bogota_crime_stats
