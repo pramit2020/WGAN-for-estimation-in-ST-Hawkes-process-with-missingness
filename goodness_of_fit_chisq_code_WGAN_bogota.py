@@ -32,10 +32,6 @@ import argparse
 from scipy.stats import wasserstein_distance
 
 
-# In[2]:
-
-
-#load Bogot.shp
 fp = "/home/pramitd/Bogota_folder/bogota.shp"
 Bogota = gdp.read_file(fp)
 # bogota vic, missing, population and maps
@@ -51,10 +47,6 @@ bogota_vic_rate = np.array(bogota_merged[["Victimization"]])
 bogota_missing_rate = 1- bogota_merged[["Percent_reported"]]
 crime_numbers = (bogota_pop/scaling_factor)*bogota_vic_rate*12
 bogota_merged["expected crime numbers"] = crime_numbers
-
-
-# In[3]:
-
 
 #Bogota centres taken by Nil jana Akpinar
 centers=torch.tensor([[6,20],[-6,20],[6,-20],[-6,-20],[6,-10],[6,10], [-6,-10],[-6,10],[-6,0],[6,0],[-6,-30],[-6,30],[6,30],[6,-30]], requires_grad = False)
@@ -97,25 +89,6 @@ def district_wise_numbers(data_stream):
         if d[i] !=-1:
             num_list[d[i]] = num_list[d[i]]+1     
     return num_list
-
-
-# In[4]:
-
-
-def unimodal_background_intensity(mu,event,c): #e=(t,x,y); t,x,y,c are tensors
-    t = event[0]
-    x= event[1]
-    y = event[2]
-    return (mu/2*centers.shape[0]*math.pi*sigma_background*sigma_background)*torch.exp(-(torch.pow(x-c[0],2)+torch.pow(y-c[1],2))/2*torch.pow(sigma_background,2))
-
-def bogota_background_density(mu,event):
-    l = []
-    for i in range(len(centers)):
-        l.append(unimodal_background_intensity(mu,event, centers[i,:]))
-    return torch.sum(torch.stack(l, dim=0))
-
-
-# In[5]:
 
 
 cut_off = 50
@@ -389,25 +362,18 @@ def generate_synthetic_data(estimate, N, Ksynthetic):
     #synthetic_data = [generate_FAKE_crimes_bogota(N=N, mu=estimate['mu'], alpha=estimate['alpha'], beta=estimate['beta'], sigma=0.1, K=10) for _ in range(Ksynthetic)]
     return synthetic_data
 
-
-# In[ ]:
-
-
-
-
-
-# In[20]:
-
-
+#function to compute the chisquare statistic for goodness of fit
 N = 250
 Ksynthetic = 1000
 comparison_results_filepath = "GoF_test_chisq_true_vs_synthetic_interarrival_times_Bogota_WGAN.txt"
 num_bins = 50
-def compute_chisq_true_vs_synthetic_interarrival_times(training_file_path, estimates_file_path):
+
+#here the training_data would have the replications of reported crime data
+#the estimate theta_hat
+def compute_chisq_true_vs_synthetic_interarrival_times(training_data, estimate):
     t_start = time.time()
-    
     # Load the real training data
-    with open(training_file_path, 'rb') as file:
+    with open(training_data, 'rb') as file:
         training_data_bogota = pickle.load(file)
         
     # Extract interarrival times from the data
