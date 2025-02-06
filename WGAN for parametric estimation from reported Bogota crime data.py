@@ -52,16 +52,15 @@ d_copy = d
 print("Initialization point a,b,c,d = ",a,b,c,d)
 
 
-
 #load Bogot.shp
-fp = "~/Bogota_folder/bogota.shp"
+fp = "diff-crime-reporting forked from nakpinar's Github repo/metadata/bogota.shp"
 Bogota = gdp.read_file(fp)
 Bogota.head()
 
 
 
 # bogota vic, missing, population and maps
-bogota_crime_stats=pd.read_csv("diff-crime-reporting forked from nakpinar's Github repo/Bogota_folder/bogota_victimization.csv")
+bogota_crime_stats=pd.read_csv("diff-crime-reporting forked from nakpinar's Github repo/metadata/bogota_victimization.csv")
 bogota_crime_stats[["LocNombre"]] = bogota_crime_stats[["District"]]
 del bogota_crime_stats["District"]
 bogota_crime_stats
