@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
-
-
 import pickle
 import sys
 import numpy as np
@@ -340,8 +334,6 @@ def load_estimates(file_paths):
     return est_file #this gives a tuple of scalar (mu,alpha,beta, sigma)
 
 
-# In[15]:
-
 
 def generate_synthetic_data(estimate, N, Ksynthetic):
     """
@@ -368,8 +360,9 @@ Ksynthetic = 1000
 comparison_results_filepath = "GoF_test_chisq_true_vs_synthetic_interarrival_times_Bogota_WGAN.txt"
 num_bins = 50
 
-#here the training_data would have the replications of reported crime data
-#the estimate theta_hat
+#here, the training_data would have the replications of reported crime data
+#the estimate theta_hat should be a tuple containing the values (mu_hat,alpha_hat,beta_hatmsigma_hat)
+
 def compute_chisq_true_vs_synthetic_interarrival_times(training_data, estimate):
     t_start = time.time()
     # Load the real training data
@@ -383,7 +376,8 @@ def compute_chisq_true_vs_synthetic_interarrival_times(training_data, estimate):
     training_non_zero_intervals = flattened_interarrival_times[flattened_interarrival_times > 0]
 
     # Generate synthetic data from estimates
-    mu_hat, alpha_hat, beta_hat, sigma_hat = load_estimates(estimates_file_path)
+    mu_hat, alpha_hat, beta_hat, sigma_hat = estimate
+    #load_estimates(estimates_file_path)
     mu_hat_tensor = torch.tensor(mu_hat)
     alpha_hat_tensor = torch.tensor(alpha_hat)
     beta_hat_tensor = torch.tensor(beta_hat)
@@ -448,41 +442,6 @@ def compute_chisq_true_vs_synthetic_interarrival_times(training_data, estimate):
     print("Total time elapsed = :", round((t_end-t_start)/60, 2), " minutes")
     
     return chisq_stat
-
-
-
-comparison_results_filepath = "GoF_test_chisq_stat_Bogota.txt"
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Compute Chi-Squared statistic for final event times between training and synthetic data.")
-    parser.add_argument("--a", type=float, required=True, help="Value of parameter a")
-    parser.add_argument("--b", type=float, required=True, help="Value of parameter b")
-    parser.add_argument("--c", type=float, required=True, help="Value of parameter c")
-    parser.add_argument("--d", type=float, required=True, help="Value of parameter d")
-    parser.add_argument("--lr_mu", type=float, required=True, help="Value of parameter lr_mu")
-    
-    args = parser.parse_args()
-    
-    a_test = args.a
-    b_test = args.b
-    c_test = args.c
-    d_test = args.d
-    lr_mu_test = args.lr_mu
-    
-    training_file_path = 'ORIGINAL_AKPINAR_real_bogota_data_size_250.pkl'
-    estimate_file_path = f'original_Akpinar_parameter_WGAN_estimates_INITIALIZATION__from_a={a_test}_b={b_test}_c={c_test}_d={d_test}_lr_mu={lr_mu_test}.pkl'
-    
-    chisq_stat = compute_chisq_true_vs_synthetic_interarrival_times(training_file_path, estimate_file_path)
-    
-    # Save the result with parameters
-    result = f"{chisq_stat:.3f}, a={a_test}, b={b_test}, c={c_test}, d={d_test}, lr_mu={lr_mu_test}"
-    with open(comparison_results_filepath, 'a') as f:
-        f.write(result + '\n')
-
-
-
-
-
 
 
 
