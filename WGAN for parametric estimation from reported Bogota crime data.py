@@ -147,12 +147,11 @@ def district_wise_numbers(data_stream):
 
 
 
-
+#we write a function to generate K many Hawkes streams of crimes in Bogota, each of size N 
 cut_off = 50
 burn_in = 75
 sigma_background = torch.tensor(4.5, requires_grad = False)
 #this is in exact form of Nil Jana akpinar's eqn upto constants
-
 
 
 def bogota_ST_hawkes_parallel(N, mu, alpha, beta, sigma, K):
