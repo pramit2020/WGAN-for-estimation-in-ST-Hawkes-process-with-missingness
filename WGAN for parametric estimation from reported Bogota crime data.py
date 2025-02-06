@@ -51,13 +51,10 @@ d_copy = d
 #these values are given by the user from keyboard input
 print("Initialization point a,b,c,d = ",a,b,c,d)
 
-
 #load Bogot.shp
 fp = "diff-crime-reporting forked from nakpinar's Github repo/metadata/bogota.shp"
 Bogota = gdp.read_file(fp)
 Bogota.head()
-
-
 
 # bogota vic, missing, population and maps
 bogota_crime_stats=pd.read_csv("diff-crime-reporting forked from nakpinar's Github repo/metadata/bogota_victimization.csv")
@@ -65,21 +62,10 @@ bogota_crime_stats[["LocNombre"]] = bogota_crime_stats[["District"]]
 del bogota_crime_stats["District"]
 bogota_crime_stats
 
-
-# In[25]:
-
-
 bogota_merged=pd.merge(Bogota, bogota_crime_stats, on ="LocNombre")
 
 
-# In[26]:
-
-
-## scaling_factor 
-scaling_factor = 500
-
-
-# In[27]:
+scaling_factor = 500 #this is a factor to scale the population, it can be changed as needed -it's not too important overall.
 
 
 bogota_pop = np.array(bogota_merged[["Population"]])
