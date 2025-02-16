@@ -78,7 +78,7 @@ def districts(data_stream):
             district_list.append(int(index))
     return district_list
 
-#write a function give how many points in ecah dfistriuct from a data stream 
+#write a function to give how many points in each district from a data stream 
 def district_wise_numbers(data_stream):
     d = districts(data_stream)
     num_list = np.zeros(19)
@@ -254,11 +254,6 @@ def bogota_ST_hawkes_parallel(N, mu, alpha, beta, sigma, K):
     return torch.stack((gapped_T,X,Y), dim=0)
 
 
-
-
-# In[6]:
-
-
 # Thinning function for a single stream
 def one_stage_thinning_FAKE(data_stream):
     N = data_stream.shape[1]
@@ -309,32 +304,10 @@ def one_stage_thinning_multiple_streams_FAKE(bogota_stream):
     return torch.stack(thinned_list, dim=2)
 
 
-
-# In[7]:
-
-
 # Generate synthetic crimes with thinning
 def generate_FAKE_crimes_bogota(N, mu, alpha, beta, sigma, K):
     fake_crimes_all = bogota_ST_hawkes_parallel(N, mu, alpha, beta, sigma, K)
     return one_stage_thinning_multiple_streams_FAKE(fake_crimes_all)
-
-
-# In[14]:
-
-
-def load_estimates(file_paths):
-    """
-    Load the WGAN estimates from the provided file paths.
-    
-    Parameters:
-    file_paths (list): List of file paths to load.
-    
-    Returns:
-    list: List of loaded estimates.
-    """
-    with open(file_paths, 'rb') as file:
-        est_file = pickle.load(file)
-    return est_file #this gives a tuple of scalar (mu,alpha,beta, sigma)
 
 
 
