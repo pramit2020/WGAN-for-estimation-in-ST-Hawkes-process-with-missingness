@@ -86,26 +86,8 @@ centers=torch.tensor([[6,20],[-6,20],[6,-20],[-6,-20],[6,-10],[6,10], [-6,-10],[
 D = dict(zip(bogota_merged.LocNombre, bogota_merged.geometry))
 polys = gdp.GeoSeries(D)
 
-def districts(data_stream): #given (t_i,x_i,y_i) stream, it'd give the districts
-     
-    dummy_stream = torch.clone(data_stream).detach() #create a non-tensor numpy copy of the data stream
-    spatial_comps =gdp.GeoDataFrame(gdp.points_from_xy(x=dummy_stream[1,:] , y=dummy_stream[2,:])) #(x_i,y_i) pairs
-    spatial_comps.rename(columns={0: 'geometry'},inplace=True)
-    M=spatial_comps.assign(**{key: spatial_comps.within(geom) for key, geom in polys.items()})
-    M = np.array(M)
-    N = M[:,1:] #this should contain 0,1's 
-    
-    district_list=[]
-    for i in range(data_stream.shape[1]):
-        if np.sum(N[i,:])==0:
-            district_list.append(-1) #point is outside
-        else:
-            index = np.where(N[i,:]==1)[0] #take the first one in case of any anomoly 
-            district_list.append(int(index))
-    
-    return np.array(district_list)
 
-#new
+
 def districts(data_stream):
     """
     Given a data stream containing (t_i, x_i, y_i) coordinates and a dictionary of polygons representing districts,
@@ -134,9 +116,7 @@ def districts(data_stream):
     return district_list
 
 
-
-
-#write a function give how many points in ecah dfistriuct from a data stream 
+#Here, we write a function to give how many points in each district from a data stream 
 def district_wise_numbers(data_stream):
     d = districts(data_stream)
     num_list = np.zeros(19)
@@ -169,7 +149,7 @@ def bogota_ST_hawkes_parallel(N, mu, alpha, beta, sigma, K):
     uc=0 ## counter of uniforms used
     gc=0 ## counter of how many Gaussian's used for spatial component
 
-    ## generate K many first events & need to tweak the background intenbsity function
+    ## generate K many first events & need to tweak the background intensity function
     # we now would make a K by 14 tensor than a K sized vector
     partial_mu = mu/centers.shape[0]
     #t_first_matrix = -torch.log(1-seq_of_uniform_tensors[uc:uc+K*centers.shape[0]]).reshape((K, centers.shape[0]))/torch.mul(partial_mu, torch.pow(sigma,2))
@@ -203,8 +183,8 @@ def bogota_ST_hawkes_parallel(N, mu, alpha, beta, sigma, K):
             E=torch.stack(t_events[0:p],dim=1)
             F=torch.broadcast_to(t_events[p-1].reshape((K,1)), E.shape)
             hello = (1+beta/2*math.pi*torch.mul(alpha,torch.pow(sigma,2))*torch.exp(-beta*(E-F))*torch.log(1-u_vec).reshape((K,p))) ## if negative, put 0 , these are arrivals from triggering part 
-            # this generates all possible next arrival times for K streams
-           #change this, instead of t_base being a K sized vector, we need to get a K by 14 sized tensor
+            # This generates all possible next arrival times for K streams
+           #change this: instead of t_base being a K sized vector, we need to get a K by 14 sized tensor
             t_base_matrix = -torch.log(1-seq_of_uniform_tensors[uc:uc+K*centers.shape[0]]).reshape((K,centers.shape[0]))/partial_mu #possible arrivals from background density from each center
             uc = uc+K*centers.shape[0] #uc=uc+14K
             M = torch.min(t_base_matrix, axis=1)
@@ -247,7 +227,7 @@ def bogota_ST_hawkes_parallel(N, mu, alpha, beta, sigma, K):
         
         if p>0 & p> burn_in:
             
-            # we shall ignore past events beyond cut_off steps to generate future triggers
+            # we shall ignore past events beyond cut_off steps to generate future triggers, this is a simplifying assumption
             t_empty_list = []
             x_empty_list =[]
             y_empty_list=[]
@@ -363,9 +343,6 @@ def one_stage_thinning_multiple_streams_FAKE(bogota_stream):
 
 
 
-# In[41]:
-
-
 # Generate synthetic crimes with thinning
 #use old hawkes function
 def generate_FAKE_crimes_bogota(N, mu, alpha, beta, sigma, K):
@@ -376,8 +353,6 @@ def generate_REAL_crimes_bogota(N, mu, alpha, beta, sigma, K):
     real_crimes_all = bogota_ST_hawkes_parallel(N, mu, alpha, beta, sigma, K)
     return one_stage_thinning_multiple_streams_FAKE(real_crimes_all)  
 
-
-# In[23]:
 
 
 ##generate real data ~P_r
@@ -527,7 +502,6 @@ def generator_loss():
 
 
 
-
 #set up training, optimizers 
 from scipy.stats.distributions import betaprime
 #initiate parameters
@@ -539,12 +513,7 @@ n_critic=5
 nu = 0.3 
 
 
-##initilaisation
-#mu = torch.tensor(np.random.uniform(low=0.1, high=0.7, size=1)[0], requires_grad=True)
-#alpha =  torch.tensor(np.random.uniform(low=0.2, high=0.7, size=1)[0], requires_grad=True)
-#beta = torch.tensor(np.random.uniform(low=0.2, high=1, size=1)[0], requires_grad=True)
-
-## let us initialise from true values
+##initilaisation of the Hawkes parameters for optimization routine - these should be keyboard inputs 
 mu = torch.tensor(a, requires_grad=True)
 alpha =  torch.tensor(b, requires_grad=True)
 beta = torch.tensor(c, requires_grad=True)
