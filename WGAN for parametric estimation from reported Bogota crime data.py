@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
-
-
+#load necessary packages
 import argparse
 import numpy as np
 import random
@@ -287,10 +286,6 @@ def bogota_ST_hawkes_parallel(N, mu, alpha, beta, sigma, K):
     return torch.stack((gapped_T,X,Y), dim=0)
 
 
-# In[39]:
-
-
-
 
 # Thinning function for a single stream
 def one_stage_thinning_FAKE(data_stream):
@@ -342,9 +337,7 @@ def one_stage_thinning_multiple_streams_FAKE(bogota_stream):
     return torch.stack(thinned_list, dim=2)
 
 
-
 # Generate synthetic crimes with thinning
-#use old hawkes function
 def generate_FAKE_crimes_bogota(N, mu, alpha, beta, sigma, K):
     fake_crimes_all = bogota_ST_hawkes_parallel(N, mu, alpha, beta, sigma, K)
     return one_stage_thinning_multiple_streams_FAKE(fake_crimes_all)
@@ -357,9 +350,8 @@ def generate_REAL_crimes_bogota(N, mu, alpha, beta, sigma, K):
 
 ##generate real data ~P_r
 ## real data ~ P_r = HP(mu,alpha,beta)
-## generate these in batch rather than individually
-## simulation 
-# Set the random seed for PyTorch
+## Generate these in batches rather than individually
+## simulation - Set the random seed for PyTorch
 torch.manual_seed(42)
 # Set the random seed for NumPy
 np.random.seed(42)
