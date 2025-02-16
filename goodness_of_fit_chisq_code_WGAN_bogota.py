@@ -26,6 +26,8 @@ import argparse
 from scipy.stats import wasserstein_distance
 
 
+#change the Bogota file path if needed
+#load Bogota map and data
 fp = "/home/pramitd/Bogota_folder/bogota.shp"
 Bogota = gdp.read_file(fp)
 # bogota vic, missing, population and maps
@@ -34,7 +36,8 @@ bogota_crime_stats[["LocNombre"]] = bogota_crime_stats[["District"]]
 del bogota_crime_stats["District"]
 #bogota_crime_stats
 bogota_merged=pd.merge(Bogota, bogota_crime_stats, on ="LocNombre")
-## scaling_factor 
+
+## scaling_factor for the population - this is not very important in our WGAN-based method, though
 scaling_factor = 500
 bogota_pop = np.array(bogota_merged[["Population"]])
 bogota_vic_rate = np.array(bogota_merged[["Victimization"]])
