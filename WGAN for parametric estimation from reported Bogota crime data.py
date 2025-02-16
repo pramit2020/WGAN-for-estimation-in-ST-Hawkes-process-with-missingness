@@ -367,13 +367,12 @@ real_sigma = torch.tensor(d, requires_grad=False)
 N=250
 num_real_seqs=10000
 
-#generate data
+#generate training data comprising of IID streams of reported crime data in Bogota
 st = time.time()
-#Extended_Real_data_bogota = generate_REAL_crimes_bogota(N, real_mu, real_alpha, real_beta, real_sigma, num_real_seqs)
 Real_data_bogota = generate_REAL_crimes_bogota(N, real_mu, real_alpha, real_beta, real_sigma, num_real_seqs)
 et = time.time()
-print("OLD function: time required for generating ", str(num_real_seqs), " Bogota crime Spatiotemporal HP realisations of size", str(N), " is ", round((et-st)/60,3), " minutes")
-
+print("time required for generating ", str(num_real_seqs), " Bogota crime Spatiotemporal HP realisations of size", str(N), " is ", round((et-st)/60,3), " minutes")
+#we can pickle to save this training data
 
 
 
