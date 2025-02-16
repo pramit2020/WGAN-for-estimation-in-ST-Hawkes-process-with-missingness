@@ -15,11 +15,8 @@ library(spatstat)
 library(dplyr)
 library(future.apply)
 
-#use this in my M3 macbook Air
-setwd("/Users/pramitd/Library/Mobile Documents/com~apple~CloudDocs/Desktop/diff-crime-reporting")
 
-#use this in my iMac
-#setwd("~/Desktop/diff-crime-reporting") #making this so that I can run the code from my desktop in any computer be it the iMac or the M1 laptop
+#set the working directory suitably or change the file paths as needed
 source('utils/model_utils.R')
 source('utils/real_bogota_utils.R')
 
