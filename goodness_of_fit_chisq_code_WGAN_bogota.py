@@ -28,7 +28,7 @@ from scipy.stats import wasserstein_distance
 
 #change the Bogota file path if needed
 #load Bogota map and data
-fp = "/home/pramitd/Bogota_folder/bogota.shp"
+fp="diff-crime-reporting forked from nakpinar's Github repo/metadata/bogota.shp"
 Bogota = gdp.read_file(fp)
 # bogota vic, missing, population and maps
 bogota_crime_stats=pd.read_csv("/home/pramitd/Bogota_folder/bogota_victimization.csv")
