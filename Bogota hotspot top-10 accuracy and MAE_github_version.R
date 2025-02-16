@@ -22,6 +22,7 @@ source('utils/real_bogota_utils.R')
 
 
 #this function generates Hawkes stream of ALL CRIMES in bogota given parameters
+#This is adapted from the Github repo https://github.com/nakpinar/diff-crime-reporting
 generate_data_all_crimes <- function(params, time_steps, version = 2024) {
   
   mu_bar = params[1]
@@ -146,9 +147,7 @@ generate_multiple_streams <- function(params, time_steps, mc_reps) {
 
 
 
-
-
-#given grid and list of data, compute expected crimes - this is absiaclly aggregation and drawing heatmap from teh MC_reps
+#given grid and list of data, compute expected crimes - this is essentially an aggregation and drawing heatmap from the MC_reps
 # Updated function to compute expected crimes and generate a heatmap using Bogotá grid
 compute_expected_crimes <- function(data_list, bogota_shapefile, grid_size, filename_prefix) {
   # Generate grid based on Bogotá shapefile
